@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const userRoute = require('./src/routes/user-route')
+const mongoose = require('mongoose')
+const userModel = require ('./src/models/user')
 
-var USERS = [
-    {'id': 1, 'username': 'wendel', 'password': '123456'},
-    {'id': 2, 'username': 'sousa', 'password': '123456'}
-];
+mongoose.connect('mongodb://localhost:27017/database_mongo', {
+    useNewUrlParser: true,
+    userUnifiedTopology: true
+})
 
 var HELLO = [
     {'msg': 'Hello Express'}
@@ -14,9 +17,7 @@ var HELLO = [
 function getHello() {
     return HELLO;
 }
-function getUsers() {
-    return USERS;
-}
+
 
 
 app.use(bodyParser.json());
@@ -25,9 +26,10 @@ app.get('/', function(req, res){
     res.send(getHello())
 });
 
-app.get('/users', function(req, res){
-    res.send(getUsers())
-});
+/*Chama a Pagina de usuario */
+
+app.use('/users', userRoute);
+
 
 app.listen(4000, function(){
     console.log('Hello express Listen on port 4000')
